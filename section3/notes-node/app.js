@@ -21,18 +21,25 @@ console.log('Starting app.js')
 
 const fs = require('fs')
 const os = require('os')
+const _ = require('lodash')
 const notes = require('./notes.js')
 
-var res = notes.addNote()
-console.log(res)
-var sum = notes.addNumbers(1, 2)
-console.log(sum)
+// console.log(_.isString(true))
+// console.log(_.isString('Dirk'))
+
+var filterArray = _.uniq(['Mike'])
+console.log(filterArray)
+
+// var res = notes.addNote()
+// console.log(res)
+// var sum = notes.addNumbers(1, 2)
+// console.log(sum)
 // var user = os.userInfo()
 
 // // Note: the following is depreciated...
-// //fs.appendFile('greetings.txt', 'Hello World!')
+// // fs.appendFile('greetings.txt', 'Hello World!')
 // // use one of the following instead:
-// //fs.appendFileSync('greetings.txt', 'Hello World!')
+// // fs.appendFileSync('greetings.txt', 'Hello World!')
 // fs.appendFile('greetings.txt', `Hello ${user.username}! You are ${notes.age}.`, error => {
 //     if (error) {
 //         console.log('Unable to write to file.')
