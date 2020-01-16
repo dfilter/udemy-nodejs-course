@@ -1,29 +1,27 @@
-console.log('Starting notes.js')
-
 const fs = require('fs')
 
 
-var fetchNotes = () => {
+const fetchNotes = () => {
     try {
-        var notesString = fs.readFileSync('notes-data.json')
-        return JSON.parse(notesString)
+        const notesString = fs.readFileSync('notes-data.json')
+        return JSON.parse(notesString.toString())
     } catch (e) {
         return []
     }
 }
 
-var saveNotes = (notes) => {
-    fs.writeFileSync('notes-data.json', JSON.stringify(notes))
+const saveNotes = (notes) => {
+    fs.writeFileSync('notes-data.json', JSON.stringify(notes)) 
 }
 
-var addNote = (title, body) => {
-    var notes = fetchNotes()
-    var note = {
+const addNote = (title, body) => {
+    let notes = fetchNotes()
+    let note = {
         title,
         body
     }
 
-    var duplicateNotes = notes.filter((note) => note.title === title)
+    const duplicateNotes = notes.filter((note) => note.title === title)
 
     if (duplicateNotes.length === 0) {
         notes.push(note)
@@ -35,15 +33,15 @@ var addNote = (title, body) => {
     console.log('Note title in use!')
 }
 
-var getAll = () => {
+const getAll = () => {
     console.log('Getting all notes')
 }
 
-var getNote = (title) => {
+const getNote = (title) => {
     console.log('Reading note', title)
 }
 
-var removeNote = (title) => {
+const removeNote = (title) => {
     console.log('Removing note', title)
 }
 
@@ -51,5 +49,5 @@ module.exports = {
     addNote,
     getAll,
     getNote,
-    removeNote  // es6 if key value pare are the same there is no need to use them
+    removeNote  // es6 if key value pair are the same there is no need to use them
 }
