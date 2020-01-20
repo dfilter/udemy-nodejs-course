@@ -19,9 +19,9 @@ var originalNote = {
 }
 
 var originalNoteString = JSON.stringify(originalNote)
-fs.writeFileSync('notes.json', originalNoteString)
+fs.writeFileSync('1-json.json', originalNoteString)
 
-var noteString = fs.readFileSync('notes.json')
+var noteString = fs.readFileSync('1-json.json')
 var note = JSON.parse(noteString)
 console.log(typeof note)
 console.log(note)
