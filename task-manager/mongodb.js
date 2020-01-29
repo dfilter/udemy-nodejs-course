@@ -1,3 +1,5 @@
+// C:\Users\dfilter\mongodb\bin\mongod.exe --dbpath=C:\Users\dfilter\mongodb-data
+
 const { MongoClient, ObjectID } = require('mongodb')
 
 const connectionURL = 'mongodb://127.0.0.1:27017'
