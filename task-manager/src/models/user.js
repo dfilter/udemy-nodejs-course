@@ -49,6 +49,8 @@ const userSchema = new mongoose.Schema({
       required: true
     }
   }]
+}, {
+  timestamps: true
 })
 
 // used by mongoose so that it can figure out what is related to what
