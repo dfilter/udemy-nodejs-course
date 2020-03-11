@@ -2,13 +2,18 @@ const mongoose = require('mongoose')
 
 const Task = mongoose.model('Task', {
   description: {
-    type: String,
     required: true,
-    trim: true
+    trim: true,
+    type: String
   },
   completed: {
-    type: Boolean,
-    default: false
+    default: false,
+    type: Boolean
+  },
+  owner: {
+    ref: 'User',
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
   }
 })
 

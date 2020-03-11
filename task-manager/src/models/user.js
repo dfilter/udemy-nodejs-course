@@ -49,6 +49,13 @@ const userSchema = new mongoose.Schema({
   }]
 })
 
+// used by mongoose so that it can figure out what is related to what
+userSchema.virtual('tasks', {
+  foreignField: 'owner',  // owner is the field in the Task model that user _id exists in
+  localField: '_id',  // user _id has a relationship with a Task
+  ref: 'Task',
+})
+
 // 
 userSchema.methods.toJSON = function () {
   const user = this
