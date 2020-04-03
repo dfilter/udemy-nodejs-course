@@ -30,6 +30,8 @@ const upload = multer({
 // use multer upload.single as middleware
 app.post('/upload', upload.single('upload'), (req, res) => {
   res.send()
+}, (error, req, res, next) => {  // handle errors
+  res.status(400).send({ error: error.message })
 })
 
 app.use(express.json())
