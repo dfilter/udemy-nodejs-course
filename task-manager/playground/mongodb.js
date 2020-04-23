@@ -1,4 +1,5 @@
 // C:\Users\dfilter\mongodb\bin\mongod.exe --dbpath=C:\Users\dfilter\mongodb-data
+// /home/dfilter/mongodb/bin/mongod --dbpath=/home/dfilter/mongodb-data
 
 const { MongoClient, ObjectID } = require('mongodb')
 
