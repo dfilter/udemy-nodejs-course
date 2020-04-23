@@ -1,4 +1,5 @@
 const multer = require('multer')
+const sharp = require('sharp')
 
 const { Router } = require('express')
 
@@ -86,7 +87,7 @@ router.patch('/users/me', auth, async (req, res) => {
   const allowedUpdates = ['name', 'email', 'password', 'age']
   const isValidOperation = updates.every(update => allowedUpdates.includes(update))
   if (!isValidOperation) {
-    return res.status(400).send({error: 'Invalid updates'})
+    return res.status(400).send({ error: 'Invalid updates' })
   }
   try {
     updates.forEach(update => req.user[update] = req.body[update])
@@ -108,8 +109,11 @@ router.delete('/users/me', auth, async (req, res) => {
 
 // use authentication middleware before using multer middleware
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-  // multer will put the file here, if no dest property is assigned in multer config
-  req.user.avatar = req.file.buffer
+  // multer will put the file here (inside buffer), if no dest property is assigned in multer config
+  // req.user.avatar = req.file.buffer
+  // using sharp we can process/modify the image here we set the image to be png and 250x250 px.
+  const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+  req.user.avatar = buffer
   await req.user.save()
   res.send()
 }, (error, req, res, next) => {
@@ -132,7 +136,8 @@ router.get('/users/:id/avatar', async (req, res) => {
     if (!user || !user.avatar) {
       throw new Error('No user or user avatar found.')
     }
-    res.set('Content-Type', 'image/jpg')
+    // since we used sharp to convert all avatars to png we are confident that this is the format we will be sending back
+    res.set('Content-Type', 'image/png')
     res.send(user.avatar)
   } catch (error) {
     console.log(error)
