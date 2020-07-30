@@ -6,6 +6,8 @@ const { Router } = require('express')
 const auth = require('../middleware/auth')
 const User = require('../models/user')
 
+const { sendWelcomeEmail, sendCancellationEmail } = require('../emails/account')
+
 const router = new Router()
 
 const upload = multer({
@@ -27,6 +29,7 @@ router.post('/users', async (req, res) => {
   const user = new User(req.body)
   try {
     await user.save()
+    // sendWelcomeEmail(user.email, user.name)  // uncomment if you have a working email system
     const token = await user.generateAuthToken()
     res.status(201).send({ user, token })
   } catch (error) {
@@ -101,7 +104,8 @@ router.patch('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
   try {
     await req.user.remove()  // user object from middleware
-    res.send(user)
+    // sendCancellationEmail(req.user.email, req.user.name)  // uncomment once email setup
+    res.send(req.user)
   } catch (error) {
     res.status(500).send(error)
   }
