@@ -79,7 +79,7 @@ userSchema.methods.toJSON = function () {
 // This must be regular function since we need access to "this"
 userSchema.methods.generateAuthToken = async function () {
   let user = this  // user instance
-  const token = jwt.sign({ _id: user._id.toString() }, 'this-is-the-secret-key')
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
   user.tokens = user.tokens.concat({ token })
   await user.save()
   return token
