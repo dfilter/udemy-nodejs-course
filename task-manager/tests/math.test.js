@@ -20,11 +20,18 @@ test('Should calculate conversion of Celsius (0) to Fahrenheit (32)', () => {
   expect(temperature).toBe(32)
 })
 
-test('Async test demo', (done) => {
-  setTimeout(() => {
-    expect(1).toBe(1)
+// test('Async test demo', (done) => {
+//   setTimeout(() => {
+//     expect(1).toBe(1)
+//     done()
+//   }, 2000)
+// })
+
+test('async should add two numbers', (done) => {
+  add(2, 3).then(sum => {
+    expect(sum).toBe(5)
     done()
-  }, 2000)
+  })
 })
 
 test('async/await should add two numbers', async () => {
