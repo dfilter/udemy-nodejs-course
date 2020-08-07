@@ -8,12 +8,12 @@ const { userOneId, userOne, setupDatabase, teardownDatabase } = require('./fixtu
 beforeEach(setupDatabase)
 
 test('Should signup a new user', async () => {
-  const userTwo = {
-    name: 'Jane',
-    email: 'jane@email.com',
-    password: 'jane123!'
+  const testUser = {
+    name: 'Test',
+    email: 'test@email.com',
+    password: 'test123!'
   }
-  const response = await request(app).post('/users').send(userTwo).expect(201)
+  const response = await request(app).post('/users').send(testUser).expect(201)
 
   // Assert that a new user was created
   const user = await User.findById(response.body.user._id)
@@ -22,12 +22,12 @@ test('Should signup a new user', async () => {
   // Assertions about the response body
   expect(response.body).toMatchObject({
     user: {
-      name: userTwo.name,
-      email: userTwo.email
+      name: testUser.name,
+      email: testUser.email
     },
     token: user.tokens[0].token
   })
-  expect(user.password).not.toBe(userTwo.password)
+  expect(user.password).not.toBe(testUser.password)
 })
 
 test('Should login existing user', async () => {
