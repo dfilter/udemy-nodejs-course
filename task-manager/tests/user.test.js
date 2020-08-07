@@ -1,25 +1,11 @@
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const request = require('supertest')
 
 const app = require('../src/app')
 const User = require('../src/models/user')
 
-const userOneId = new mongoose.Types.ObjectId()
-const userOne = {
-  _id: userOneId,
-  name: 'John',
-  email: 'john@email.com',
-  password: 'johnpass123!',
-  tokens: [{
-    token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
-  }]
-}
+const { userOneId, userOne, setupDatabase, teardownDatabase } = require('./fixtures/db')
 
-beforeEach(async () => {
-  await User.deleteMany()
-  await new User(userOne).save()
-})
+beforeEach(setupDatabase)
 
 test('Should signup a new user', async () => {
   const userTwo = {
@@ -129,6 +115,4 @@ test('Should fail to update invalid user fields', async () => {
     .expect(400)
 })
 
-afterAll(async () => {
-  await mongoose.connection.close()
-})
+afterAll(teardownDatabase)
