@@ -22,24 +22,43 @@ beforeEach(async () => {
 })
 
 test('Should signup a new user', async () => {
-  await request(app).post('/users').send({
-    name: 'Test',
-    email: 'test@gmail.com',
-    password: 'testing123!'
-  }).expect(201)
+  const userTwo = {
+    name: 'Jane',
+    email: 'jane@email.com',
+    password: 'jane123!'
+  }
+  const response = await request(app).post('/users').send(userTwo).expect(201)
+
+  // Assert that a new user was created
+  const user = await User.findById(response.body.user._id)
+  expect(user).not.toBeNull()
+
+  // Assertions about the response body
+  expect(response.body).toMatchObject({
+    user: {
+      name: userTwo.name,
+      email: userTwo.email
+    },
+    token: user.tokens[0].token
+  })
+  expect(user.password).not.toBe(userTwo.password)
 })
 
 test('Should login existing user', async () => {
-  await request(app).post('/users/login').send({
+  const response = await request(app).post('/users/login').send({
     email: userOne.email,
     password: userOne.password
   }).expect(200)
+
+  // Assert that token response matches users second token
+  const user = await User.findById(response.body.user._id)
+  expect(response.body.token).toBe(user.tokens[1].token)
 })
 
 test('Should reject login of nonexisting user', async () => {
   await request(app).post('/users/login').send({
-    email: 'jane@email.com',
-    password: 'janepass123!'
+    email: userOne.email,
+    password: 'badpass'
   }).expect(400)
 })
 
@@ -64,6 +83,10 @@ test('Should delete profile for user', async () => {
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200)
+
+  // Assert that user was in-fact deleted 
+  const user = await User.findById(userOneId)
+  expect(user).toBeNull()
 })
 
 test('Should fail to delete profile for unauthorized user', async () => {
