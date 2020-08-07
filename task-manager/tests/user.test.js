@@ -115,4 +115,76 @@ test('Should fail to update invalid user fields', async () => {
     .expect(400)
 })
 
+test('Should not signup user with invalid name/email/password', async () => {
+  const testUser = {
+    name: 'Test2',
+    email: 'test@email.com',
+    password: 'testpass123!'
+  }
+  // Assert that user with invalid email cannot be created
+  await request(app)
+    .post('/users')
+    .send({ ...testUser, email: 'bademail' })
+    .expect(400)
+  // Assert that user with invalid name cannot be created
+  await request(app)
+    .post('/users')
+    .send({ ...testUser, name: undefined })
+    .expect(400)
+  // Assert that user with invalid password cannot be created
+  await request(app)
+    .post('/users')
+    .send({ ...testUser, password: 'password' })
+    .expect(400)
+})
+
+test('Should not update user if unauthenticated', async () => {
+  await request(app)
+    .patch('/users/me')
+    .send({ name: 'New Name' })
+    .expect(401)
+})
+
+test('Should not update user with invalid name/email/password', async () => {
+  // Assert that user name cannot be updated if passed a bad name
+  const name = null
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({ name })
+    .expect(400)
+
+  // Assert that user email cannot be updated if passed a bad email
+  const email = 'bademail'
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({ email })
+    .expect(400)
+
+  // Assert that above requests were not saved to database
+  const user = await User.findById(userOneId)
+  expect(user.name).not.toEqual(name)
+  expect(user.email).not.toEqual(email)
+
+  // Assert that user password cannot be updated if passed a bad password
+  const password = 'password'
+  await request(app)
+    .patch('/users/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({ password })
+    .expect(400)
+
+  // Assert that above requests were not saved to database
+  const afterPatchUser = await User.findById(userOneId)
+  expect(user.password).toEqual(afterPatchUser.password)
+})
+
+test('Should not delete user if unauthenticated', async () => {
+  await request(app)
+    .delete('/users/me')
+    .send()
+    .expect(401)
+})
+
 afterAll(teardownDatabase)
