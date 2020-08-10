@@ -11,10 +11,11 @@
     <h1>Chat App</h1>
     <hr>
     <form id="message-form">
-        <textarea name="message" cols="30" placeholder="Message..." rows="3"></textarea>
+        <textarea id="message-box" name="message" cols="30" placeholder="Message..." rows="3"></textarea>
         <br>
         <button type="submit">Send</button>
     </form>
+    <button id="send-location">Send Location</button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
 </body>
