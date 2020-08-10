@@ -11,8 +11,13 @@ const locationButton = document.querySelector('#send-location')
 messageForm.addEventListener('submit', (event) => {
   event.preventDefault()
 
-  socket.emit('sendMessage', messageBox.value)
-  messageBox.value = null
+  socket.emit('sendMessage', messageBox.value, (error) => {
+    messageBox.value = null
+    if (error) {
+      return console.log(error)
+    }
+    console.log('Message delivered!')
+  })
 })
 
 locationButton.addEventListener('click', (event) => {
@@ -20,9 +25,12 @@ locationButton.addEventListener('click', (event) => {
     return alert('Geolocation is not supported by your browser.')
   }
   navigator.geolocation.getCurrentPosition((position) => {
-    socket.emit('sendLocation', {
+    const coords = {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
+    }
+    socket.emit('sendLocation', coords, () => {
+      console.log('Location shared!')
     })
   })
 })
